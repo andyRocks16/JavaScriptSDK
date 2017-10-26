@@ -1,5 +1,5 @@
 
-var SECURE_KEY = "7d706fb9-3a06-48eb-ada8-e940d26654ed";
+var SECURE_KEY = "1227d1c4-1385-4d5f-ae73-23e99f74b006";
 
 
 var URL = "http://localhost:4730";
@@ -29,7 +29,6 @@ var window = window || null;
 var request = require('request');
 var CB = require('../dist/cloudboost');
 var equal = require('deep-equal');
-var blobUtil = require('blob-util');
 describe("Cloud App", function() {
     
     it("MongoDb,RedisDb & Elastic SearchDb Statuses..", function(done) {
@@ -1461,7 +1460,6 @@ describe("Export & Import Database", function () {
                         var importData = Buffer.from(resp, 'utf8');
                         importParams['file'] = importData.toString('utf-8');
                         var req = request.post(importUrl, function (err, resp, body) {
-                            console.log(resp)
                             done();
                         }, function (err) {
                             done(err)
