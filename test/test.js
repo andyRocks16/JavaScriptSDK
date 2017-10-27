@@ -1,5 +1,5 @@
 
-var SECURE_KEY = "1227d1c4-1385-4d5f-ae73-23e99f74b006";
+var SECURE_KEY = "7d706fb9-3a06-48eb-ada8-e940d26654ed";
 
 
 var URL = "http://localhost:4730";
@@ -1045,7 +1045,7 @@ describe("Export & Import Table", function () {
         if (!window) {
             CB._request('POST', url, exportParams).then(function (data) {
 
-                data = JSON.parse(data).data;
+                data = JSON.parse(data);
                 if (data.length !== savedObject.length) {
                     return done('ERROR')
                 }
@@ -1071,7 +1071,7 @@ describe("Export & Import Table", function () {
                 if (flag) {
                     var name = 'abc.json';
                     var type = 'application/json';
-                    var importData = { "data": data };
+                    var importData = data;
                     var obj = new CB.CloudTable('abc');
                     obj.save().then(function (res) {
                         var fileObj = new CB.CloudFile(name, JSON.stringify(importData), type);
@@ -1130,7 +1130,7 @@ describe("Export & Import Table", function () {
                 data: exportParams,
                 success: function (resp) {
                     try {
-                        var data = resp.data
+                        var data = resp
                         if (data.length !== savedObject.length) {
                             return done('ERROR')
                         }
@@ -1156,7 +1156,8 @@ describe("Export & Import Table", function () {
                         if (flag) {
                             var name = 'abc.json';
                             var type = 'application/json';
-                            var importData = { "data": data };
+                            var importData = data;
+                            console.log(importData)
                             var obj = new CB.CloudTable('abc');
                             obj.save().then(function (res) {
                                 var fileObj = new CB.CloudFile(name, JSON.stringify(importData), type);
