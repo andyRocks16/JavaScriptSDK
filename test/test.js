@@ -1,5 +1,5 @@
 
-var SECURE_KEY = "7d706fb9-3a06-48eb-ada8-e940d26654ed";
+var SECURE_KEY = "1227d1c4-1385-4d5f-ae73-23e99f74b006";
 
 
 var URL = "http://localhost:4730";
@@ -1157,7 +1157,6 @@ describe("Export & Import Table", function () {
                             var name = 'abc.json';
                             var type = 'application/json';
                             var importData = data;
-                            console.log(importData)
                             var obj = new CB.CloudTable('abc');
                             obj.save().then(function (res) {
                                 var fileObj = new CB.CloudFile(name, JSON.stringify(importData), type);
@@ -1435,7 +1434,7 @@ describe("Export & Import Database", function () {
     });
 
     it("Export Database and Import Database", function (done) {
-        this.timeout(50000);
+        this.timeout(100000);
         var default_count = 0;
         var table_count = 0;
         var exportUrl = CB.apiUrl + "/backup/" + CB.appId + "/exportdb";
