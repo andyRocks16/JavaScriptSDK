@@ -84,20 +84,6 @@ describe("Export & Import Database", function () {
                     });
                     if (table_count >= tables.length && default_count == defaultTables.length) {
                         importParams['key'] = CB.appKey;
-                        var Buffer = require('buffer/').Buffer;
-                        var importData = Buffer.from(resp, 'utf8');
-                        importParams['file'] = importData.toString('utf-8');
-                        var req = request.post(importUrl, function (err, resp, body) {
-                            // done();
-                        }, function (err) {
-                            done(err)
-                        });
-                        var form = req.form();
-                        form.append('key', CB.appKey);
-                        form.append('file', importData.toString('utf-8'), {
-                            filename: 'myfile.json',
-                            contentType: 'text/json'
-                        });
                         done();
                     } else {
                         done("Data Inappropriate");
@@ -125,27 +111,6 @@ describe("Export & Import Database", function () {
                                 // }
                             });
                             if (table_count >= tables.length && default_count == defaultTables.length) {
-                                importParams = new FormData();
-                                importParams.append('key', CB.appKey)
-                                var blob = new Blob([resp], { "type": "application/json" });
-                                importParams.append('file', blob);
-                                $.ajax({
-                                    url: importUrl,
-                                    type: "POST",
-                                    data: importParams,
-                                    processData: false,
-                                    contentType: false,
-                                    success: function (resp) {
-                                        try {
-                                            // done();
-                                        } catch (e) {
-                                            done(e);
-                                        }
-                                    },
-                                    error: function (xhr, status, errorThrown) {
-                                        done("Something went wrong..");
-                                    },
-                                });
                                 done();
                             } else {
                                 done("Data Inappropriate");
