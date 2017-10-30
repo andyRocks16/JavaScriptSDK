@@ -74,16 +74,13 @@ describe("Export & Import Database", function () {
                 data = JSON.parse(resp);
                 if (typeof data == "object") {
                     data.map(function (element) {
-                        // if (element.name != "_Schema" && element.name != "system.indexes") {
                             if (defaultTables.indexOf(element.name) != -1) {
                                 default_count++;
                             } else if (tables.indexOf(element.name) != -1) {
                                 table_count++;
                             }
-                        // }
                     });
                     if (table_count >= tables.length && default_count == defaultTables.length) {
-                        importParams['key'] = CB.appKey;
                         done();
                     } else {
                         done("Data Inappropriate");
@@ -102,13 +99,11 @@ describe("Export & Import Database", function () {
                         data = JSON.parse(resp);
                         if (typeof data == "object") {
                             data.map(function (element) {
-                                // if (element.name != "_Schema" && element.name != "system.indexes") {
                                     if (defaultTables.indexOf(element.name) != -1) {
                                         default_count++;
                                     } else if (tables.indexOf(element.name) != -1) {
                                         table_count++;
                                     }
-                                // }
                             });
                             if (table_count >= tables.length && default_count == defaultTables.length) {
                                 done();
