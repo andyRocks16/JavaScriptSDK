@@ -88,7 +88,7 @@ describe("Export & Import Database", function () {
                         var importData = Buffer.from(resp, 'utf8');
                         importParams['file'] = importData.toString('utf-8');
                         var req = request.post(importUrl, function (err, resp, body) {
-                            done();
+                            // done();
                         }, function (err) {
                             done(err)
                         });
@@ -98,7 +98,7 @@ describe("Export & Import Database", function () {
                             filename: 'myfile.json',
                             contentType: 'text/json'
                         });
-                        // done();
+                        done();
                     } else {
                         done("Data Inappropriate");
                     }
@@ -137,7 +137,7 @@ describe("Export & Import Database", function () {
                                     contentType: false,
                                     success: function (resp) {
                                         try {
-                                            done();
+                                            // done();
                                         } catch (e) {
                                             done(e);
                                         }
@@ -146,7 +146,7 @@ describe("Export & Import Database", function () {
                                         done("Something went wrong..");
                                     },
                                 });
-                                // done();
+                                done();
                             } else {
                                 done("Data Inappropriate");
                             }
