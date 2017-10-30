@@ -62,7 +62,7 @@ describe("Export & Import Database", function () {
     });
 
     it("Export Database and Import Database", function (done) {
-        this.timeout(250000);
+        this.timeout(200000);
         var default_count = 0;
         var table_count = 0;
         var exportUrl = CB.apiUrl + "/backup/" + CB.appId + "/exportdb";
