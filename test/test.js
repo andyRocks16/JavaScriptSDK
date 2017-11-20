@@ -3235,6 +3235,117 @@ describe("CloudEvent", function() {
 
 });
 
+describe("CloudDevice", function () {
+
+    it("Should create new device with all fields", function (done) {
+        if(CB._isNode){
+           done();
+           return;
+        }
+
+        this.timeout(300000);       
+
+        var obj = new CB.CloudObject('Device');
+        obj.set('deviceToken', "data");
+        obj.set('deviceOS', "windows");
+        obj.set('timezone', "chile");
+        obj.set('channels', ["pirates","hackers","stealers"]);
+        obj.set('metadata', {"appname":"hdhfhfhfhf"});
+        obj.save({
+            success : function(savedObj){
+                if(savedObj){
+                    done();
+                }else{
+                    done("error on creating device object");
+                }
+            },error : function(error){
+                done(error);
+            }
+        });
+    });
+
+    it("Should fail on creating device with same deviceToken twice", function (done) {
+        if(CB._isNode){
+           done();
+           return;
+        }
+
+        this.timeout(300000);       
+
+        var obj = new CB.CloudObject('Device');
+        obj.set('deviceToken', "hdgdd");        
+        obj.save({
+            success : function(savedObj){
+                if(savedObj){
+
+                    var obj = new CB.CloudObject('Device');
+                    obj.set('deviceToken', "hdgdd");        
+                    obj.save({
+                        success : function(savedObj2){
+                            if(savedObj2){
+                               done("created twice with same deviceToken");
+                            }else{
+                                done();
+                            }
+                        },error : function(error){
+                            done();
+                        }
+                    });
+
+                }else{
+                    done("error on creating device object");
+                }
+            },error : function(error){
+                done(error);
+            }
+        });
+    });
+
+    it("Should update device", function (done) {
+        if(CB._isNode){
+           done();
+           return;
+        }
+
+        this.timeout(300000);       
+
+        var obj = new CB.CloudObject('Device');
+        obj.set('deviceToken', "token");
+        obj.set('deviceOS', "windows");
+        obj.set('timezone', "chile");
+        obj.set('channels', ["pirates","hackers","stealers"]);
+        obj.set('metadata', {"appname":"hdhfhfhfhf"});
+        obj.save({
+            success : function(savedObj){
+                if(savedObj){
+
+                    savedObj.set('deviceToken', "toke2");
+                    savedObj.set('deviceOS', "windows2");
+                    savedObj.set('timezone', "chile2");
+                    savedObj.set('channels', ["pirates2","hackers2","stealers2"]);
+                    savedObj.set('metadata', {"appname":"hdhfhfhfhf2"});
+                    savedObj.save({
+                        success : function(savedObj2){
+                            if(savedObj2){
+                                done();
+                            }else{
+                                done("error on updating device object");
+                            }
+                        },error : function(error){
+                            done(error);
+                        }
+                    });
+
+                }else{
+                    done("error on creating device object for the first time");
+                }
+            },error : function(error){
+                done(error);
+            }
+        });
+    });    
+
+});
 
 describe("CloudPush", function (done) {
 
@@ -12170,97 +12281,113 @@ describe("Query_ACL", function () {
 });
 
 
-describe("CloudNotification", function() {
- 
-    it("should subscribe to a channel", function(done) {
-      this.timeout(20000);
-        CB.CloudNotification.on('sample',
-      function(data){
-      }, 
-      {
-      	success : function(){
-      		done();
-      	}, 
-      	error : function(){
-      		throw 'Error subscribing to a CloudNotification.';
-      	}
-      });
-    });
+describe("CloudNotification", function () {
 
-    it("should publish data to the channel.", function(done) {
-
-        this.timeout(30000);
-        CB.CloudNotification.on('sample',  function(data){
-	      	if(data === 'data'){
-	      		done();
-	      	}else{
-	      		throw 'Error wrong data received.';
-	      	}
-	      }, 
-      	{
-      	success : function(){
-      		//publish to a channel. 
-      		CB.CloudNotification.publish('sample', 'data',{
-				success : function(){
-					//succesfully published. //do nothing. 
-					console.log("Published Successfully.");
-				},
-				error : function(err){
-					//error
-					throw 'Error publishing to a channel in CloudNotification.';
-				}
-				});
-      	}, 
-      	error : function(){
-      		throw 'Error subscribing to a CloudNotification.';
-      	}
-
-      });
-    });
-
-
-    it("should stop listening to a channel", function(done) {
-
-    	this.timeout(20000);
-
-     	CB.CloudNotification.on('sample', 
-	      function(data){
-	      	throw 'stopped listening, but still receiving data.';
-	      }, 
-	      {
-	      	success : function(){
-	      		//stop listening to a channel. 
-	      		CB.CloudNotification.off('sample', {
-					success : function(){
-						//succesfully stopped listening.
-						//now try to publish. 
-						CB.CloudNotification.publish('sample', 'data',{
-							success : function(){
-								//succesfully published.
-								//wait for 5 seconds.
-								setTimeout(function(){ 
-									done();
-								}, 5000);
-							},
-							error : function(err){
-								//error
-								throw 'Error publishing to a channel.';
-							}
-						});
-					},
-					error : function(err){
-						//error
-						throw 'error in sop listening.';
+	it("should subscribe to a channel", function (done) {
+		var done_called = false;
+		this.timeout(20000);
+		CB.CloudNotification.on('sample',
+			function (data) {
+			},
+			{
+				success: function () {
+					if(!done_called){
+						done_called = true;
+						done();
 					}
-				});
-	      	}, 
-	      	error : function(){
-	      		throw 'Error subscribing to a CloudNotification.';
-	      	}
-	      });
+				},
+				error: function () {
+					throw 'Error subscribing to a CloudNotification.';
+				}
+			});
+	});
+
+	it("should publish data to the channel.", function (done) {
+		var done_called = false;
+		this.timeout(30000);
+		CB.CloudNotification.on('sample', function (data) {
+			console.log(data, "ppp")
+			if (data === 'data') {
+				console.log("now dallint")
+				if(!done_called){
+					done_called = true;
+					done();
+				}
+				return;
+			} else {
+				console.log("Errrrr12")
+				throw 'Error wrong data received.';
+			}
+		},
+			{
+				success: function () {
+					//publish to a channel. 
+					CB.CloudNotification.publish('sample', 'data', {
+						success: function () {
+							//succesfully published. //do nothing. 
+							console.log("Published Successfully.");
+						},
+						error: function (err) {
+							console.log(err, "lll")
+							//error
+							throw 'Error publishing to a channel in CloudNotification.';
+						}
+					});
+				},
+				error: function (err) {
+					console.log("Errr", err)
+					throw 'Error subscribing to a CloudNotification.';
+				}
+
+			});
+	});
 
 
-    });
+	it("should stop listening to a channel", function (done) {
+
+		this.timeout(20000);
+		var done_called = false;
+		CB.CloudNotification.on('sample',
+			function (data) {
+				throw 'stopped listening, but still receiving data.';
+			},
+			{
+				success: function () {
+					//stop listening to a channel. 
+					CB.CloudNotification.off('sample', {
+						success: function () {
+							//succesfully stopped listening.
+							//now try to publish. 
+							CB.CloudNotification.publish('sample', 'data', {
+								success: function () {
+									//succesfully published.
+									//wait for 5 seconds.
+									setTimeout(function () {
+										if(!done_called){
+											done_called = true;
+											done();
+										}
+									}, 5000);
+								},
+								error: function (err) {
+									//error
+									throw 'Error publishing to a channel.';
+								}
+							});
+						},
+						error: function (err) {
+							//error
+							throw 'error in sop listening.';
+						}
+					});
+				},
+				error: function () {
+					throw 'Error subscribing to a CloudNotification.';
+				}
+			});
+
+
+	});
 
 });
 describe("MasterKey ACL", function () {
@@ -14126,6 +14253,55 @@ describe("Disabled - Cloud Objects Notification", function() {
       }catch(e){
         done();
       }
+    });
+
+});
+describe("Disabled Cloud Object test", function() {
+
+    before(function(){
+        this.timeout(10000);
+        CB.appKey = CB.masterKey;
+    });
+
+    it("should save cloudObject", function(done) {
+        this.timeout('30000');
+
+        var table = new CB.CloudTable('uniqueTablename');
+        var column = new CB.Column('name');
+        column.dataType = 'Text';
+        table.addColumn(column);
+        table.save({
+            success : function(table){
+
+                var obj = new CB.CloudObject('uniqueTablename');
+                obj.set('name', 'sample');
+                obj.save({
+                    success : function(newObj){
+                        if(obj.get('name') !== 'sample'){
+                            done("name is not equal to what was saved.");
+                            throw 'name is not equal to what was saved.';
+                        }
+                        if(!obj.id){
+                            done('id is not updated after save.');
+                            throw 'id is not updated after save.';
+                        }
+
+                        done();
+                    }, error : function(error){
+                        done(error);
+                        throw 'Error saving the object';
+                    }
+                });
+
+            }, error : function(error){
+                done(error);
+            }
+        });        
+
+    });
+
+    after(function() {
+        CB.appKey = CB.jsKey;
     });
 
 });
